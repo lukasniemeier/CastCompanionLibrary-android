@@ -449,14 +449,17 @@ public class Utils {
                 LOGE(TAG, "Failed to build media tracks from the wrapper bundle", e);
             }
         }
-        return new MediaInfo.Builder(wrapper.getString(KEY_URL))
+        MediaInfo.Builder builder = new MediaInfo.Builder(wrapper.getString(KEY_URL))
                 .setStreamType(wrapper.getInt(KEY_STREAM_TYPE))
                 .setContentType(wrapper.getString(KEY_CONTENT_TYPE))
                 .setMetadata(metaData)
                 .setCustomData(customData)
-                .setMediaTracks(mediaTracks)
-                .setStreamDuration(wrapper.getLong(KEY_STREAM_DURATION))
-                .build();
+                .setMediaTracks(mediaTracks);
+        long duration = wrapper.getLong(KEY_STREAM_DURATION);
+        if (duration != MediaInfo.UNKNOWN_DURATION) {
+            builder.setStreamDuration(duration);
+        }
+        return builder.build();
     }
 
     /**
